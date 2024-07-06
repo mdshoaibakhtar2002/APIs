@@ -24,7 +24,7 @@ def get_connection():
         port='5432',
         user='postgres',
         password='1234',
-        dbname='test_db'
+        dbname='Jobscript'
     )
 
 
@@ -34,9 +34,17 @@ def lambda_handler(event, context):
     print('Here All checks passed')
 
     try:
-        cursor.execute("SELECT * FROM test_table")
-        data = cursor.fetchone()
-        print(data)
+        cursor.execute("SELECT * FROM users")
+        data = cursor.fetchall()
+        arr = []
+        if data:
+            for i in data:
+                obj = {}
+                for key, value in i.items():
+                    obj[key] = value
+
+                arr.append(obj)
+            print(arr)
     except Exception as e:
         connection.rollback()
         raise e
