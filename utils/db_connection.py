@@ -3,17 +3,6 @@ import boto3
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
-# Define constants for the Secrets Manager and RDS proxy URL
-SM_EXAMPLE_DATABASE_CREDENTIALS = 'rds!cluster-b2eed415-4dc5-4459-8662-28a431ed2ccf'
-URL_RDS_PROXY = 'pocdatabse-instance-1.ctoue0wuiu87.us-west-2.rds.amazonaws.com'
-
-# Uncomment and implement the following function if you need to retrieve credentials from AWS Secrets Manager
-# def get_db_credentials():
-#     secrets_manager = boto3.client('secretsmanager')
-#     secret_value = secrets_manager.get_secret_value(SecretId=SM_EXAMPLE_DATABASE_CREDENTIALS)
-#     print('secret_value', secret_value)
-#     return json.loads(secret_value['SecretString'])
-
 
 def get_connection():
     # Replace the following line with the actual function to get credentials if needed
