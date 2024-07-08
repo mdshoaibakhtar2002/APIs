@@ -33,8 +33,8 @@ class UserManagement(APIView):
         data = request.data
 
         query = """
-            INSERT INTO users (email, phone_number, first_name, last_name, address, city, state, pincode, is_organization, password, confirm_password)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO users (email, phone_number, first_name, last_name,is_organization, password, confirm_password)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
         """
 
         cursor.execute(query, (
@@ -42,10 +42,6 @@ class UserManagement(APIView):
             data['phone_number'],
             data['first_name'],
             data['last_name'],
-            data['address'],
-            data['city'],
-            data['state'],
-            data['pincode'],
             data['is_organization'],
             data['password'],
             data['confirm_password']
