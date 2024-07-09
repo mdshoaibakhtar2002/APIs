@@ -19,8 +19,7 @@
     ],
     "routes":[
         {
-            "src":"/static/(.*)",
-            "dist":"/static/$1"
+            "src":"/static/(.*)"
         },{
             "src":"/(.*)",
             "dist":"myproject/wsgi.py"
