@@ -4,6 +4,8 @@ from rest_framework import status
 from psycopg2.extras import RealDictCursor
 from utils.get_connection import GetConnection
 import psycopg2
+from utils.token_management import TokenManagement
+
 
 class UserManagement(APIView):
     def get(self, request, *args, **kwargs):
@@ -33,8 +35,8 @@ class UserManagement(APIView):
         data = request.data
 
         query = """
-            INSERT INTO users (email, phone_number, first_name, last_name, address, city, state, pincode, is_organization, password, confirm_password)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO users (email, phone_number, first_name, last_name,is_organization, password, confirm_password)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
         """
 
         cursor.execute(query, (
@@ -42,10 +44,6 @@ class UserManagement(APIView):
             data['phone_number'],
             data['first_name'],
             data['last_name'],
-            data['address'],
-            data['city'],
-            data['state'],
-            data['pincode'],
             data['is_organization'],
             data['password'],
             data['confirm_password']
@@ -67,67 +65,50 @@ class AuthenticateUser(APIView):
         cursor = connection.cursor(cursor_factory=RealDictCursor)
         data = request.data
 
-        email = data.get('email')
-        password = data.get('password')
-
-        if not email or not password:
-            return Response(
-                {
-                    'statusCode': status.HTTP_400_BAD_REQUEST,
-                    'message': 'Email and password are required.'
-                },
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
         try:
-            cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
+            if not data.get('email') or not data.get('password'):
+                return Response({
+                    'statusCode': status.HTTP_400_BAD_REQUEST,
+                    'error': 'Email and password are required.'
+                })
+
+            cursor.execute(
+                "SELECT * FROM users WHERE email = %s", (data['email'],))
             user = cursor.fetchone()
 
             if user is None:
-                return Response(
-                    {
-                        'statusCode': status.HTTP_404_NOT_FOUND,
-                        'message': 'User not found.'
-                    },
-                    status=status.HTTP_404_NOT_FOUND
-                )
-
-            users = {}
-            for key, value in user.items():
-                    users[key] = value
-
-            # print('users', users)
-            if password != users['password']:
-                return Response(
-                    {
-                        'statusCode': status.HTTP_401_UNAUTHORIZED,
-                        'message': 'Invalid password.'
-                    },
-                    status=status.HTTP_401_UNAUTHORIZED
-                )
-
-            return Response(
-                {
-                    'statusCode': status.HTTP_200_OK,
-                    'message': 'User authenticated successfully',
-                    'data': {
-                        'email': user['email'],
-                        'first_name': user['first_name'],
-                        'last_name': user['last_name']
-                    }
-                },
-                status=status.HTTP_200_OK
-            )
-
-        except psycopg2.Error as e:
-            return Response(
-                {
+                return Response({
                     'statusCode': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    'message': 'Database error: ' + str(e)
-                },
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+                    'error': 'User not found.'
+                })
 
+            users = {key: value for key, value in user.items()}
+
+            if data['password'] != users['password']:
+                return Response({
+                    'statusCode': status.HTTP_401_UNAUTHORIZED,
+                    'error': 'Invalid email or password.'
+                })
+
+            if user['email'] is not None:
+                print('Valid user, Now generating token...')
+                token = TokenManagement.token_management(user['email'])
+                print('token', token)
+            return Response({
+                'statusCode': status.HTTP_200_OK,
+                'message': 'User authenticated successfully',
+                'token': token,
+                'data': {
+                    'email': user['email'],
+                    'first_name': user['first_name'],
+                    'last_name': user['last_name']
+                }
+            })
+
+        except Exception as e:
+            return Response({
+                'statusCode': 500,
+                'error': str(e)
+            })
         finally:
-            cursor.close()
             connection.close()
