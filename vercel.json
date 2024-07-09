@@ -21,8 +21,7 @@
         {
             "src":"/static/(.*)"
         },{
-            "src":"/(.*)",
-            "dist":"myproject/wsgi.py"
+            "src":"/(.*)"
         }
     ]
 }
