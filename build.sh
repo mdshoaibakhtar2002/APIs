@@ -10,3 +10,6 @@ python3 manage.py migrate --noinput
 
 echo "Collect static"
 python3 manage.py collectstatic --noinput --clear
+
+# Make sure the output directory exists
+mkdir -p staticfiles
