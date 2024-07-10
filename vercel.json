@@ -19,7 +19,11 @@
                     {
                       "command": "python manage.py collectstatic --noinput",
                       "use": "virtualenv"
-                    }
+                    },
+                    {
+                        "command": "mkdir -p path/to/output/directory",
+                        "use": "virtualenv"
+                      }
                 ]
             }
         },
