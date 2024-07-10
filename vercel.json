@@ -28,7 +28,10 @@
         },
         {
             "src":"build.sh",
-            "use":"@vercel/static-build"
+            "use":"@vercel/static-build",
+            "config" :{
+                "distDir":"15mb"
+            }
         }
     ],
     "routes":[
