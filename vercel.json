@@ -6,7 +6,20 @@
             "use":"@vercel/python",
             "config" :{
                 "maxLambdaSize":"15mb",
-                "runtime":"python3.10"
+                "runtime":"python3.10",
+                "commands": [
+                    {
+                      "use": "virtualenv"
+                    },
+                    {
+                      "command": "pip install -r requirements.txt",
+                      "use": "virtualenv"
+                    },
+                    {
+                      "command": "python manage.py collectstatic --noinput",
+                      "use": "virtualenv"
+                    }
+                ]
             }
         },
         {
