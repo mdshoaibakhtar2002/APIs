@@ -6,6 +6,7 @@
             "use":"@vercel/python",
             "config" :{
                 "maxLambdaSize":"15mb",
+                "outputDirectory": "path/to/output/directory",
                 "runtime":"python3.10",
                 "commands": [
                     {
