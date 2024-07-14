@@ -14,27 +14,43 @@ class JobCreatorHandler(APIView):
         data = request.data
 
         query = """
-            INSERT INTO jobs (job_role, company_name, location, work_mode, job_offer, company_size, company_logo, start_date, experience, last_date, probation_period, skills, requirement, perks_benefit, eligibility, availabilty)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO jobs (
+                job_role, 
+                job_description,
+                company_name,
+                job_location,
+                work_mode,
+                job_offer,
+                job_id,
+                requirements,
+                job_type,
+                experience, 
+                last_date, 
+                skills,
+                key_responsibilities,
+                preferred_qualifications,
+                immediate_joining
+            )
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
 
+        print('data',data)
         cursor.execute(query, (
             data['job_role'],
+            data['job_description'],
             data['company_name'],
-            data['location'],
+            data['job_location'],
             data['work_mode'],
             data['job_offer'],
-            data['company_size'],
-            data['company_logo'],
-            data['start_date'],
+            data['job_id'],
+            data['requirements'],
+            data['job_type'],
             data['experience'],
             data['last_date'],
-            data['probation_period'],
             data['skills'],
-            data['requirement'],
-            data['perks_benefit'],
-            data['eligibility'],
-            data['availabilty']
+            data['key_responsibilities'],
+            data['preferred_qualifications'],
+            data['immediate_joining']
         ))
 
         connection.commit()

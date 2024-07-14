@@ -34,6 +34,15 @@ class UserManagement(APIView):
         cursor = connection.cursor(cursor_factory=RealDictCursor)
         data = request.data
 
+
+        if(data['password'] != data['confirm_password']):
+            return Response(
+                {
+                'statusCode': status.HTTP_400_BAD_REQUEST,
+                'result': 'Password & Confirm password not matched'
+            }
+            )
+
         query = """
             INSERT INTO users (email, phone_number, first_name, last_name,is_organization, password, confirm_password, job_id)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
