@@ -5,6 +5,7 @@ from psycopg2.extras import RealDictCursor
 from utils.get_connection import GetConnection
 import psycopg2
 from utils.token_management import TokenManagement
+from utils.send_otp import SendOTP
 
 
 class UserManagement(APIView):
@@ -60,13 +61,24 @@ class UserManagement(APIView):
         ))
 
         connection.commit()
+        send_otp = SendOTP.send_otp(data['phone_number']).__dict__
+        otp_response = send_otp.get('data')
+        if(otp_response.get('status_code') == 200):
+            return Response(
+                {
+                    'statusCode': status.HTTP_200_OK,
+                    'result': 'User created successfully'
+                },
+                status=status.HTTP_200_OK
+            )
+            
         return Response(
-            {
-                'statusCode': status.HTTP_200_OK,
-                'result': 'User created successfully'
-            },
-            status=status.HTTP_200_OK
-        )
+                {
+                    'statusCode': status.HTTP_400_OK,
+                    'result': 'Unable to send OTP.'
+                },
+                status=status.HTTP_400_OK
+            )
 
 
 class AuthenticateUser(APIView):

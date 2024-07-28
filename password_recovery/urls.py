@@ -1,9 +1,9 @@
 # accounts/urls.py
 from django.urls import path
-from .views import ForgotPasswordView, VerifyOTPView, ResetPasswordView
+from .views import VerifyOTP, ResetPassword, ForgotPassword
 
 urlpatterns = [
-    path('forgot-password/', ForgotPasswordView.as_view(), name='forgot-password'),
-    path('verify-otp/', VerifyOTPView.as_view(), name='verify-otp'),
-    path('reset-password/', ResetPasswordView.as_view(), name='reset-password'),
+    path('verify-otp', VerifyOTP.as_view(), name='verify-otp'),
+    path('reset-password', ResetPassword.as_view(), name='reset-password'),
+    path('forgot-password', ForgotPassword.as_view(), name='forgot-password'),
 ]
