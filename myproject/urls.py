@@ -23,4 +23,5 @@ urlpatterns = [
     path('v1/api/', include('user_management.urls')),
     path('v1/api/', include('create_jobs.urls')),
     path('v1/api/', include('apply_job.urls')),
+    path('v1/api/', include('password_recovery.urls')),
 ]
